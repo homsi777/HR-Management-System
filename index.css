@@ -1,0 +1,131 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  /* Fallback color */
+  background-color: #f8fafc;
+  /* Set the background image directly without an overlay */
+  background-image: url('/img/hr.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px; /* Thin border */
+  background-color: #ef4444; /* A shade of red */
+  z-index: 100;
+}
+
+.printable-receipt,
+.printable-leave-receipt,
+.printable-advance-receipt,
+.printable-content-a4 {
+  display: none;
+}
+
+@media print {
+  body::before {
+    display: none;
+  }
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Hide all elements within the component that is printing, except for the receipt itself */
+  .is-printing > *:not(.printable-receipt):not(.printable-leave-receipt):not(.printable-advance-receipt) {
+    display: none !important;
+  }
+  .is-printing-full-page > *:not(.printable-content-a4) {
+      display: none !important;
+  }
+
+  /* These rules are for general page printing, like reports */
+  main {
+    overflow: visible !important;
+    height: auto !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+  body {
+    background-image: none !important;
+    background-color: white !important;
+  }
+  .printable-area {
+     padding: 0 !important;
+  }
+  .bg-white {
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+  }
+
+  /* A4 Print Styles */
+  .printable-content-a4 {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20mm; /* Standard A4 margins */
+    font-size: 12pt;
+    background: white;
+  }
+
+  /* Thermal Receipt Styles */
+  .printable-receipt,
+  .printable-leave-receipt,
+  .printable-advance-receipt {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  @page {
+    size: 58mm;
+    margin: 2mm 3mm;
+  }
+  .receipt-content {
+     direction: rtl;
+     font-family: monospace;
+     font-size: 8pt;
+     line-height: 1.4;
+     color: black;
+  }
+  .receipt-content h3 {
+    font-size: 9pt;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  .receipt-content p {
+    margin: 2px 0;
+  }
+  .receipt-content .line {
+    border-top: 1px dashed black;
+    margin: 4px 0;
+  }
+  .receipt-content .details {
+    margin: 5px 0;
+  }
+  .receipt-content .details div {
+    display: flex;
+    justify-content: space-between;
+  }
+   .receipt-content .total {
+    font-weight: bold;
+    font-size: 9pt;
+  }
+  .receipt-content .signature {
+    margin-top: 20px;
+    padding-bottom: 10px;
+  }
+}

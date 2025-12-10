@@ -1,0 +1,8 @@
+{
+  "name": "HR Management System",
+  "description": "A comprehensive HR Management System to manage employees, payroll, attendance, leaves, and biometric devices. It provides detailed, filterable reports and a modern dashboard for real-time insights.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "defaultUserRole": "Employee"
+}

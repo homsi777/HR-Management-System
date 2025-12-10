@@ -1,0 +1,538 @@
+
+
+
+
+export type Page = 'dashboard' | 'employees' | 'clients' | 'representatives' | 'maintenance' | 'recruitment' | 'attendance' | 'leaves' | 'advances' | 'bonuses' | 'custody' | 'payroll' | 'reports' | 'phoneBook' | 'sms' | 'settings' | 'manufacturing';
+
+export type SalaryCurrency = 'SYP' | 'USD' | 'TRY';
+
+export type UserRole = 'Admin' | 'Accountant' | 'HR Officer' | 'Supervisor' | 'Employee';
+export type AccountStatus = 'Active' | 'Suspended';
+
+export type LicenseType = 'Lite' | 'Pro' | 'Full' | 'Trial';
+
+export type CenterRole = 'duplex' | 'fetch-only'; // Main or Sub-center
+
+export type Governorate = 'Damascus' | 'Aleppo' | 'Homs' | 'Hama' | 'Latakia' | 'Tartus' | 'Idlib' | 'Daraa' | 'Suwayda' | 'Quneitra' | 'DeirEzZor' | 'Hasakah' | 'Raqqa' | 'RifDimashq';
+
+export interface User {
+    id: number;
+    username: string;
+    email: string;
+    role: UserRole;
+    status: AccountStatus;
+    permissions?: Page[];
+    password?: string;
+}
+
+export interface Branch {
+    id: number;
+    name: string;
+    address: string;
+    managerId: number | null;
+    branchCode: string;
+}
+
+export interface Department {
+    id: number;
+    name: string;
+    branchId: number;
+    managerId: number | null;
+}
+
+export interface JobTitle {
+    id: number;
+    name: string;
+    departmentId: number;
+    description: string;
+}
+
+export interface Employee {
+    id: number;
+    employeeCode: string;
+    name: string;
+    jobTitleId: number;
+    departmentId: number;
+    branchId: number;
+    hireDate: string;
+    status: 'active' | 'inactive' | 'on_leave';
+    phone: string;
+    email: string;
+    address: string;
+    biometricId: string;
+    nationalId: string;
+    paymentType: 'hourly' | 'monthly' | 'weekly';
+    monthlySalary: number;
+    weeklySalary: number;
+    agreedDailyHours: number;
+    hourlyRate: number;
+    overtimeRate: number;
+    latenessDeductionRate: number;
+    assignedDeviceIds: number[];
+    workdays: number[];
+    calculateSalaryBy30Days: boolean;
+    checkInStartTime: string;
+    checkInEndTime: string;
+    checkOutStartTime: string;
+    checkOutEndTime: string;
+    photo: string;
+    idPhotoFront: string;
+    idPhotoBack: string;
+    checkInType: 'nfc' | 'fingerprint' | 'face';
+    previousJobTitle: string;
+    employeeNotes: string;
+    salaryCurrency: SalaryCurrency;
+    cvFile: string;
+    cvFileName: string;
+    cvFileType: string;
+    employmentType: 'freelance' | 'contract';
+    contractStartDate?: string;
+    contractEndDate?: string;
+    contractFile?: string;
+    contractFileName?: string;
+    contractFileType?: string;
+    source: 'manual' | 'recruitment';
+}
+
+export interface WorkScheduleHistory {
+    id: number;
+    employeeId: number;
+    hours: number;
+    startDate: string;
+}
+
+export interface AttendanceRecord {
+    id: number;
+    employeeId: number;
+    date: string;
+    checkIn: string;
+    checkOut: string | null;
+    checkOutType?: 'normal' | 'مندوب';
+    isPaid?: boolean;
+    source?: 'manual' | 'device' | 'cloud';
+}
+
+export type LeaveType = 'Annual' | 'Sick' | 'Emergency' | 'Unpaid';
+export type LeaveStatus = 'Pending' | 'Approved' | 'Rejected';
+
+export interface LeaveRequest {
+    id: number;
+    employeeId: number;
+    type: LeaveType;
+    startDate: string;
+    endDate: string;
+    reason: string;
+    status: LeaveStatus;
+    statusReason?: string;
+    deductFromSalary?: boolean;
+}
+
+export type SalaryAdvanceStatus = 'Pending' | 'Approved' | 'Rejected' | 'Paid';
+
+export interface SalaryAdvance {
+    id: number;
+    employeeId: number;
+    amount: number;
+    currency: SalaryCurrency;
+    date: string;
+    reason: string;
+    status: SalaryAdvanceStatus;
+    statusReason?: string;
+}
+
+export interface Bonus {
+    id: number;
+    employeeId: number;
+    amount: number;
+    currency: SalaryCurrency;
+    date: string;
+    reason: string;
+}
+
+export interface Deduction {
+    id: number;
+    employeeId: number;
+    amount: number;
+    currency: SalaryCurrency;
+    date: string;
+    reason: string;
+}
+
+export interface Device {
+    id: number;
+    name: string;
+    ip: string;
+    port: number;
+    commKey: number;
+    brand: 'ZKTeco' | 'Other';
+    status: 'connected' | 'disconnected' | 'unknown';
+}
+
+export interface Representative {
+    id: number;
+    employeeId: number;
+    carType: string;
+    carPlateNumber: string;
+    assignedArea: string;
+    notes: string;
+}
+
+export interface MaintenanceStaff {
+    id: number;
+    employeeId: number;
+}
+
+export interface MaintenanceRecord {
+    id: number;
+    employeeId: number;
+    amount: number;
+    currency: SalaryCurrency;
+    date: string;
+    notes: string;
+}
+
+export interface ManufacturingMaterial {
+    id: number;
+    name: string;
+    price: number;
+    currency: SalaryCurrency;
+}
+
+export type ProductionTaskStatus = 'Pending' | 'In Progress' | 'Completed';
+
+export interface ProductionTask {
+    id: string; // Unique ID for the task (generated by frontend)
+    materialId: number;
+    quantity: number;
+    total: number;
+    startDate: string;
+    endDate: string;
+    status: ProductionTaskStatus;
+    notes?: string;
+}
+
+export interface ManufacturingStaff {
+    id: number;
+    employeeId: number;
+    flatSalary: number;
+    currency: SalaryCurrency;
+    period: 'Weekly' | 'Monthly';
+    tasks: string[]; // List of text notes
+    productionTasks: ProductionTask[]; // List of material production tasks with details
+}
+
+export interface UnmatchedAttendanceRecord {
+    id: number;
+    biometricId: string;
+    date: string;
+    punches: string; // JSON string array
+}
+
+export interface ToastState {
+    message: string;
+    type: 'success' | 'error' | 'info';
+}
+
+export interface SyncSchedule {
+    enabled: boolean;
+    time: string;
+}
+
+export interface PrintSettings {
+    template: 'template1' | 'template2' | 'template3';
+    companyName: string;
+    address: string;
+    phone: string;
+    receiptTitle: string;
+    companyLogo: string;
+}
+
+export interface PayrollCalculationResult {
+    baseSalary: number;
+    overtimePay: number;
+    bonusesTotal: number;
+    latenessDeductions: number;
+    unpaidLeaveDeductions: number;
+    manualDeductionsTotal: number;
+    advancesTotal: number;
+    totalDeductions: number;
+    netSalary: number;
+    totalWorkedHours: number;
+    totalRegularHours: number;
+    totalOvertimeHours: number;
+    totalLateMinutes: number;
+    outstandingAdvances?: SalaryAdvance[];
+}
+
+export interface Payment {
+    id: number;
+    employeeId: number;
+    year: number;
+    month: number;
+    weekNumber?: number | null;
+    paymentType: 'monthly' | 'weekly' | 'hourly';
+    grossAmount: number;
+    advancesDeducted: number;
+    netAmount: number;
+    paymentDate: string;
+}
+
+export interface Custody {
+    id: number;
+    employeeId: number;
+    items: string[];
+    date: string;
+    notes?: string;
+}
+
+export interface Termination {
+    id: number;
+    employeeId: number;
+    terminationDate: string;
+    reason: string;
+    notes?: string;
+    financialData?: string; // JSON string of payroll calculation
+}
+
+export interface LeaveWorkPayment {
+    id: number;
+    leaveRequestId: number;
+    employeeId: number;
+    workDate: string;
+    checkIn: string;
+    checkOut: string;
+    durationHours: number;
+    rate: number;
+    currency: SalaryCurrency;
+    totalAmount: number;
+    notes: string;
+    status: 'Paid' | 'Unpaid';
+    paymentDate?: string;
+}
+
+export interface Client {
+    id: number;
+    name: string;
+    phone: string;
+    address: string;
+    business_field: string;
+    interests: string[];
+    notes: string;
+    rating: number;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface Interest {
+    id: number;
+    title: string;
+}
+
+export type ClientTaskStatus = 'pending' | 'in_progress' | 'done' | 'cancelled';
+
+export interface ClientTask {
+    id: number;
+    client_id: number;
+    title: string;
+    stage: number;
+    description: string;
+    due_date?: string | null;
+    reminder_time?: string | null;
+    status: ClientTaskStatus;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export type JobApplicationStatus = 'Pending' | 'Interview' | 'Accepted' | 'Rejected';
+export type Availability = 'full-time' | 'part-time' | 'freelance';
+export type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed';
+
+export interface Experience {
+    jobTitle: string;
+    company: string;
+    responsibilities: string;
+    duration: string;
+}
+
+export interface Attachment {
+    fileName: string;
+    fileType: string;
+    fileData: string; // base64
+}
+
+export interface JobApplication {
+    id: number;
+    fullName: string;
+    phone: string;
+    address: string;
+    dob?: string;
+    maritalStatus?: MaritalStatus;
+    experiences: Experience[];
+    qualifications: string;
+    trainingCourses: string;
+    availability: Availability;
+    attachments: Attachment[];
+    notes: string;
+    status: JobApplicationStatus;
+    interviewDateTime?: string | null;
+    createdEmployeeId?: number | null;
+    photo?: string;
+    idPhotoFront?: string;
+    idPhotoBack?: string;
+}
+
+export interface PhoneBookCategory {
+    id: number;
+    name: string;
+}
+
+export interface PhoneBookContact {
+    id: number;
+    name: string;
+    phone: string;
+    categoryId: number;
+    notes: string;
+}
+
+export type SMSStatus = 'PENDING' | 'SENT' | 'FAILED' | 'RETRYING';
+export type SMSPriority = 'HIGH' | 'MEDIUM' | 'LOW';
+
+export interface SMSMessage {
+    id: string;
+    recipientName: string;
+    recipientPhone: string;
+    text: string;
+    status: SMSStatus;
+    priority: SMSPriority;
+    origin: string;
+    attempts: number;
+    createdAt: string;
+    lastError?: string;
+    scheduledAt?: string;
+}
+
+export interface ServiceState {
+    status: 'listening' | 'error' | 'inactive';
+    activity: 'idle' | 'receiving';
+    port: number | string;
+    error: string | null;
+}
+
+export interface ServiceStatus {
+    apiServer: ServiceState;
+    pushService: ServiceState;
+}
+
+export interface ScannedIDData {
+    given_name: string;
+    family_name: string;
+    father_name: string;
+    mother_name: string;
+    birth_info: string;
+    national_id: string;
+    full_name: string;
+    raw: string;
+}
+
+export type TransferStatus = 'Pending' | 'Delivered' | 'Cancelled';
+
+export interface PersonInfo {
+    firstName: string;
+    lastName: string;
+    fatherName: string;
+    motherName: string;
+    dob: string;
+    nationalId: string;
+}
+
+export interface Transfer {
+    id: number;
+    sender: PersonInfo;
+    receiver: PersonInfo;
+    amount: number;
+    currency: string;
+    date: string;
+    status: TransferStatus;
+    notes: string;
+}
+
+export interface VisitorQueueEntry {
+    id: number;
+    visitorName: string;
+    queueNumber: number;
+    date: string;
+    time: string;
+}
+
+export interface BlockedBiometricId {
+    biometric_id: string;
+    reason: string;
+    created_at: string;
+}
+
+export interface IElectronAPI {
+    db: {
+        getAll: (table: string) => Promise<any[]>;
+        getById: (table: string, id: any) => Promise<any | null>;
+        insert: (table: string, data: any) => Promise<any>;
+        update: (table: string, id: any, data: any) => Promise<number>;
+        delete: (table: string, id: any) => Promise<number>;
+        getSettings: (key: string) => Promise<{ key: string; value: string } | null>;
+        updateSettings: (key: string, value: any) => Promise<number>;
+        clearAllData: (confirmationText: string) => Promise<{ success: boolean; message: string }>;
+        export: () => Promise<{ success: boolean; message: string }>;
+        import: (filePath: string) => Promise<{ success: boolean; message: string }>;
+    };
+    auth: {
+        login: (username: string, password: string) => Promise<{ success: boolean; message: string; user: User | null }>;
+    };
+    device: {
+        testConnection: (device: Device) => Promise<{ success: boolean; message: string }>;
+        syncAttendance: (device: Device) => Promise<{ success: boolean; message: string }>;
+        syncAttendanceNode: (device: Device) => Promise<{ success: boolean; message: string }>;
+        uploadUsers: (device: Device) => Promise<{ success: boolean; message: string }>;
+        runPythonScript: (device?: Device) => Promise<{ success: boolean; message: string }>;
+    };
+    app: {
+        verifyActivationCode: (payload: { code: string, type: LicenseType, enableCloud?: boolean }) => Promise<{ success: boolean; message: string }>;
+        getActivationCodes: () => Promise<{ success: boolean, data: Array<{governorate: string, type: string, code: string}> }>;
+        onDatabaseUpdate: (callback: () => void) => () => void;
+        resolveUnmatchedRecord: (payload: { unmatchedId: number; employeeId: number; }) => Promise<{ success: boolean; message: string }>;
+        onSystemEvent: (callback: (event: { type: 'success' | 'error' | 'info', message: string }) => void) => () => void;
+        onSystemStatusUpdate: (callback: (status: ServiceStatus) => void) => () => void;
+        onFileDetected: (callback: (filename: string) => void) => () => void;
+        processImportFile: (filename: string) => Promise<{ success: boolean; message: string; stats?: any }>;
+        showOpenDialog: () => Promise<{ canceled: boolean; filePath?: string }>;
+        print: (options: { content?: string; printOptions?: any }) => Promise<void>;
+        terminateEmployee: (payload: { employeeId: number; terminationDate: string; reason: string; notes?: string; financialData?: any }) => Promise<{ success: boolean; message: string; }>;
+        createVisitorQueue: (visitorName: string) => Promise<{ success: boolean; message: string; data?: VisitorQueueEntry }>;
+        launchTool: (toolName: 'zk_pro' | 'timy') => Promise<{ success: boolean; message: string }>;
+        syncToCloud: () => Promise<{ success: boolean; message: string; count?: number }>;
+        downloadFromCloud: () => Promise<{ success: boolean; message: string; count?: number }>;
+    };
+    payroll: {
+        deliverSalary: (payload: { employeeId: number; year: number; month: number; weekNumber?: number; advanceIdsToDeduct?: number[] }) => Promise<{ success: boolean; message: string }>;
+        calculate: (payload: { employeeId: number; startDate: string; endDate: string; }) => Promise<PayrollCalculationResult>;
+    };
+    leave: {
+        updateStatus: (payload: { requestId: number; newStatus: LeaveStatus; reason: string; }) => Promise<{ success: boolean; message: string; }>;
+    };
+    scanner: {
+        listPorts: () => Promise<{ path: string }[]>;
+        startListener: (config: { port: string; baudRate: number }) => void;
+        stopListener: () => void;
+        onScanData: (callback: (data: ScannedIDData) => void) => void;
+        onScanError: (callback: (error: { message: string }) => void) => void;
+        removeListeners: () => void;
+    };
+    sms: {
+        send: (message: Omit<SMSMessage, 'id' | 'status' | 'attempts' | 'createdAt' | 'lastError' | 'scheduledAt'>) => Promise<{ success: boolean, message: string }>;
+        getLog: () => Promise<SMSMessage[]>;
+    };
+}
+
+declare global {
+    interface Window {
+        electronAPI: IElectronAPI;
+    }
+}
